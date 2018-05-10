@@ -1,3 +1,31 @@
+import CacheEntry from './CacheEntry'
+import Rectangle from './Rectangle'
+import Graphics from './Graphics'
+import PIXI from 'pixi.js'
+
+interface Bitmap {
+  _defer: any
+  _createCanvas: any
+  _image: any | null
+  _url: string
+  _paintOpacity: number
+  _smooth: boolean
+  _loadListeners: any[]
+  _loadingState: string
+  _decodeAfterRequest: boolean
+  cacheEntry: null | CacheEntry
+  fontFace: string
+  fontSize: number
+  fontItalic: boolean
+  textColor: string
+  outlineColor: string
+  outlineWidth: number
+  __canvas: HTMLCanvasElement
+  __context: CanvasRenderingContext2D | null
+  __baseTexture: PIXI.BaseTexture
+  _errorListener: null | any
+  _loadListener: null | any
+}
 //-----------------------------------------------------------------------------
 /**
  * The basic object that represents an image.
@@ -7,7 +35,7 @@
  * @param {Number} width The width of the bitmap
  * @param {Number} height The height of the bitmap
  */
-export default class Bitmap {
+class Bitmap {
   constructor(width: number, height: number) {
     if (!this._defer) {
       this._createCanvas(width, height)
@@ -76,7 +104,7 @@ export default class Bitmap {
     this.outlineWidth = 4
   }
 
-  static _reuseImages = []
+  static _reuseImages: any[] = []
 
   get _canvas() {
     if (!this.__canvas) this._createCanvas()
@@ -261,7 +289,9 @@ export default class Bitmap {
     this._setDirty()
   }
 
-  private _createBaseTexture(source: object) {
+  private _createBaseTexture(
+    source: HTMLCanvasElement | HTMLImageElement | HTMLVideoElement | undefined
+  ) {
     this.__baseTexture = new PIXI.BaseTexture(source)
     this.__baseTexture.mipmap = false
     this.__baseTexture.width = source.width
@@ -297,7 +327,7 @@ export default class Bitmap {
     }
   }
 
-  static load(url) {
+  static load(url: string) {
     const bitmap = Object.create(Bitmap.prototype)
     bitmap._defer = true
     bitmap.initialize()
@@ -316,7 +346,7 @@ export default class Bitmap {
    * @param {Stage} stage The stage object
    * @return Bitmap
    */
-  static snap(stage): Bitmap {
+  static snap(stage: Stage): Bitmap {
     const width = Graphics.width
     const height = Graphics.height
     const bitmap: Bitmap = new Bitmap(width, height)
@@ -806,7 +836,7 @@ export default class Bitmap {
    * @method addLoadListener
    * @param {Function} listner The callback function
    */
-  addLoadListener(listner) {
+  addLoadListener(listner: Function) {
     if (!this.isReady()) {
       this._loadListeners.push(listner)
     } else {
@@ -986,7 +1016,7 @@ export default class Bitmap {
     return bitmap
   }
 
-  private _requestImage(url) {
+  private _requestImage(url: string) {
     if (Bitmap._reuseImages.length !== 0) {
       this._image = Bitmap._reuseImages.pop()
     } else {
@@ -1042,3 +1072,4 @@ export default class Bitmap {
     }
   }
 }
+export default Bitmap
