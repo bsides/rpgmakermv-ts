@@ -1,3 +1,25 @@
+interface String {
+  padZero(length: number): string
+  format(): string
+  contains(string: string): boolean
+}
+
+interface Number {
+  clamp(min: number, max: number): number
+  mod(n: number): number
+  padZero(length: number): string
+}
+
+interface Array<T> {
+  equals(array: Array<any>): boolean
+  clone(): Array<any>
+  contains(element: any): boolean
+}
+
+interface Math {
+  randomInt(max: number): number
+}
+
 /**
  * Returns a number whose value is limited to the given range.
  *
@@ -7,7 +29,7 @@
  * @return {Number} A number in the range (min, max)
  */
 Number.prototype.clamp = function(min: number, max: number): number {
-  return Math.min(Math.max(this, min), max)
+  return Math.min(Math.max(<number>this, min), max)
 }
 
 /**
@@ -18,7 +40,7 @@ Number.prototype.clamp = function(min: number, max: number): number {
  * @return {Number} A modulo value
  */
 Number.prototype.mod = function(n: number): number {
-  return (this % n + n) % n
+  return (<number>this % n + n) % n
 }
 
 /**
@@ -47,7 +69,7 @@ String.prototype.padZero = function(length: number): string {
   while (s.length < length) {
     s = '0' + s
   }
-  return s
+  return <string>s
 }
 
 /**
@@ -61,58 +83,48 @@ Number.prototype.padZero = function(length: number): string {
   return String(this).padZero(length)
 }
 
-Object.defineProperties(Array.prototype, {
-  /**
-   * Checks whether the two arrays are same.
-   *
-   * @method Array.prototype.equals
-   * @param {Array} array The array to compare to
-   * @return {Boolean} True if the two arrays are same
-   */
-  equals: {
-    enumerable: false,
-    value: function(array) {
-      if (!array || this.length !== array.length) {
+/**
+ * Checks whether the two arrays are same.
+ *
+ * @method Array.prototype.equals
+ * @param {Array} array The array to compare to
+ * @return {Boolean} True if the two arrays are same
+ */
+Array.prototype.equals = function(array: Array<any>): boolean {
+  if (!array || this.length !== array.length) {
+    return false
+  }
+  for (var i = 0; i < this.length; i++) {
+    if (this[i] instanceof Array && array[i] instanceof Array) {
+      if (!this[i].equals(array[i])) {
         return false
       }
-      for (var i = 0; i < this.length; i++) {
-        if (this[i] instanceof Array && array[i] instanceof Array) {
-          if (!this[i].equals(array[i])) {
-            return false
-          }
-        } else if (this[i] !== array[i]) {
-          return false
-        }
-      }
-      return true
-    }
-  },
-  /**
-   * Makes a shallow copy of the array.
-   *
-   * @method Array.prototype.clone
-   * @return {Array} A shallow copy of the array
-   */
-  clone: {
-    enumerable: false,
-    value: function() {
-      return this.slice(0)
-    }
-  },
-  /**
-   * Checks whether the array contains a given element.
-   *
-   * @method Array.prototype.contains
-   * @param {Any} element The element to search for
-   * @return {Boolean} True if the array contains a given element
-   */
-  contains: {
-    enumerable: false,
-    value: function(element) {
-      return this.indexOf(element) >= 0
+    } else if (this[i] !== array[i]) {
+      return false
     }
   }
-})
+  return true
+}
+
+/**
+ * Makes a shallow copy of the array.
+ *
+ * @method Array.prototype.clone
+ * @return {Array} A shallow copy of the array
+ */
+Array.prototype.clone = function(): Array<any> {
+  return this.slice(0)
+}
+/**
+ * Checks whether the array contains a given element.
+ *
+ * @method Array.prototype.contains
+ * @param {Any} element The element to search for
+ * @return {Boolean} True if the array contains a given element
+ */
+Array.prototype.contains = function(element: any): boolean {
+  return this.indexOf(element) >= 0
+}
 
 /**
  * Checks whether the string contains a given string.
