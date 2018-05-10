@@ -24,7 +24,7 @@ export default class CacheEntry {
   /**
    * frees the resource
    */
-  free = byTTL => {
+  free(byTTL) {
     this.freedByTTL = byTTL || false
     if (this.cached) {
       this.cached = false
@@ -36,7 +36,7 @@ export default class CacheEntry {
    * Allocates the resource
    * @returns {CacheEntry}
    */
-  allocate = (): CacheEntry => {
+  allocate(): CacheEntry {
     if (!this.cached) {
       this.cache._inner[this.key] = this
       this.cached = true
@@ -51,13 +51,13 @@ export default class CacheEntry {
    * @param {number} time TTL in seconds, 0 if not set
    * @returns {CacheEntry}
    */
-  setTimeToLive = (ticks: number, seconds): CacheEntry => {
+  setTimeToLive(ticks: number, seconds): CacheEntry {
     this.ttlTicks = ticks || 0
     this.ttlSeconds = seconds || 0
     return this
   }
 
-  isStillAlive = () => {
+  isStillAlive() {
     const cache = this.cache
     return (
       (this.ttlTicks == 0 ||
@@ -71,7 +71,7 @@ export default class CacheEntry {
    * makes sure that resource wont freed by Time To Live
    * if resource was already freed by TTL, put it in cache again
    */
-  touch = () => {
+  touch() {
     var cache = this.cache
     if (this.cached) {
       this.touchTicks = cache.updateTicks

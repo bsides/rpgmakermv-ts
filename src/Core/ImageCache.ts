@@ -5,7 +5,7 @@ export default class ImageCache {
 
   static limit = 10 * 1000 * 1000
 
-  add = (key, value) => {
+  add(key, value) {
     this._items[key] = {
       bitmap: value,
       touch: Date.now(),
@@ -15,7 +15,7 @@ export default class ImageCache {
     this._truncateCache()
   }
 
-  get = key => {
+  get(key) {
     if (this._items[key]) {
       const item = this._items[key]
       item.touch = Date.now()
@@ -25,7 +25,7 @@ export default class ImageCache {
     return null
   }
 
-  reserve = (key, value, reservationId) => {
+  reserve(key, value, reservationId) {
     if (!this._items[key]) {
       this._items[key] = {
         bitmap: value,
@@ -37,7 +37,7 @@ export default class ImageCache {
     this._items[key].reservationId = reservationId
   }
 
-  releaseReservation = reservationId => {
+  releaseReservation(reservationId) {
     const items = this._items
 
     Object.keys(items)
@@ -51,7 +51,7 @@ export default class ImageCache {
       })
   }
 
-  private _truncateCache = () => {
+  private _truncateCache() {
     const items = this._items
     let sizeLeft = ImageCache.limit
 
@@ -74,7 +74,7 @@ export default class ImageCache {
       )
   }
 
-  _mustBeHeld = (item): boolean => {
+  private _mustBeHeld(item): boolean {
     // request only is weak so It's purgeable
     if (item.bitmap.isRequestOnly()) return false
     // reserved item must be held
@@ -85,14 +85,14 @@ export default class ImageCache {
     return false
   }
 
-  isReady = () => {
+  isReady() {
     const items = this._items
     return !Object.keys(items).some(key => {
       return !items[key].bitmap.isRequestOnly() && !items[key].bitmap.isReady()
     })
   }
 
-  getErrorBitmap = (): boolean | any | null => {
+  getErrorBitmap(): boolean | any | null {
     const items = this._items
     let bitmap: any[] | null = null
     if (

@@ -6,7 +6,7 @@
  */
 export default class Graphics {
   constructor() {
-    throw new Error('This is a static class')
+    // throw new Error('This is a static class')
   }
 
   static _cssFontLoading = document.fonts && document.fonts.ready
@@ -23,7 +23,7 @@ export default class Graphics {
    * @param {String} type The type of the renderer.
    *                 'canvas', 'webgl', or 'auto'.
    */
-  static initialize = (width: number, height: number, type: string) => {
+  static initialize(width: number, height: number, type: string) {
     this._width = width || 800
     this._height = height || 600
     this._rendererType = type || 'auto'
@@ -65,7 +65,7 @@ export default class Graphics {
     this._setupCssFontLoading()
   }
 
-  static _setupCssFontLoading = () => {
+  static _setupCssFontLoading() {
     if (Graphics._cssFontLoading) {
       document.fonts.ready
         .then(function(fonts) {
@@ -77,7 +77,7 @@ export default class Graphics {
     }
   }
 
-  canUseCssFontLoading = () => {
+  canUseCssFontLoading() {
     return !!this._cssFontLoading
   }
 
@@ -136,7 +136,7 @@ export default class Graphics {
    * @static
    * @method tickStart
    */
-  static tickStart = () => {
+  static tickStart() {
     if (this._fpsMeter) {
       this._fpsMeter.tickStart()
     }
@@ -148,7 +148,7 @@ export default class Graphics {
    * @static
    * @method tickEnd
    */
-  static tickEnd = () => {
+  static tickEnd() {
     if (this._fpsMeter && this._rendered) {
       this._fpsMeter.tick()
     }
@@ -161,7 +161,7 @@ export default class Graphics {
    * @method render
    * @param {Stage} stage The stage object to be rendered
    */
-  static render = (stage: Stage) => {
+  static render(stage: Stage) {
     if (this._skipCount === 0) {
       const startTime = Date.now()
       if (stage) {
@@ -188,7 +188,7 @@ export default class Graphics {
    * @method isWebGL
    * @return {Boolean} True if the renderer type is WebGL
    */
-  static isWebGL = () => {
+  static isWebGL() {
     return this._renderer && this._renderer.type === PIXI.RENDERER_TYPE.WEBGL
   }
 
@@ -199,7 +199,7 @@ export default class Graphics {
    * @method hasWebGL
    * @return {Boolean} True if the current browser supports WebGL.
    */
-  static hasWebGL = () => {
+  static hasWebGL() {
     try {
       const canvas = document.createElement('canvas')
       return !!(
@@ -217,7 +217,7 @@ export default class Graphics {
    * @method canUseDifferenceBlend
    * @return {Boolean} True if the canvas blend mode 'difference' is supported
    */
-  canUseDifferenceBlend = (): boolean => {
+  canUseDifferenceBlend(): boolean {
     return this._canUseDifferenceBlend
   }
 
@@ -228,7 +228,7 @@ export default class Graphics {
    * @method canUseSaturationBlend
    * @return {Boolean} True if the canvas blend mode 'saturation' is supported
    */
-  static canUseSaturationBlend = (): boolean => {
+  static canUseSaturationBlend(): boolean {
     return this._canUseSaturationBlend
   }
 
@@ -238,7 +238,7 @@ export default class Graphics {
    * @static
    * @method setLoadingImage
    */
-  static setLoadingImage = src => {
+  static setLoadingImage(src) {
     this._loadingImage = new Image()
     this._loadingImage.src = src
   }
@@ -249,7 +249,7 @@ export default class Graphics {
    * @static
    * @method startLoading
    */
-  static startLoading = () => {
+  static startLoading() {
     this._loadingCount = 0
   }
 
@@ -259,7 +259,7 @@ export default class Graphics {
    * @static
    * @method updateLoading
    */
-  static updateLoading = () => {
+  static updateLoading() {
     this._loadingCount++
     this._paintUpperCanvas()
     this._upperCanvas.style.opacity = 1
@@ -271,7 +271,7 @@ export default class Graphics {
    * @static
    * @method endLoading
    */
-  static endLoading = () => {
+  static endLoading() {
     this._clearUpperCanvas()
     this._upperCanvas.style.opacity = 0
   }
@@ -283,7 +283,7 @@ export default class Graphics {
    * @method printLoadingError
    * @param {String} url The url of the resource failed to load
    */
-  static printLoadingError = (url: string) => {
+  static printLoadingError(url: string) {
     if (this._errorPrinter && !this._errorShowed) {
       this._errorPrinter.innerHTML = this._makeErrorHtml(
         'Loading Error',
@@ -309,7 +309,7 @@ export default class Graphics {
    * @static
    * @method eraseLoadingError
    */
-  static eraseLoadingError = () => {
+  static eraseLoadingError() {
     if (this._errorPrinter && !this._errorShowed) {
       this._errorPrinter.innerHTML = ''
       this.startLoading()
@@ -324,7 +324,7 @@ export default class Graphics {
    * @param {String} name The name of the error
    * @param {String} message The message of the error
    */
-  static printError = (name: string, message: string) => {
+  static printError(name: string, message: string) {
     this._errorShowed = true
     if (this._errorPrinter) {
       this._errorPrinter.innerHTML = this._makeErrorHtml(name, message)
@@ -339,7 +339,7 @@ export default class Graphics {
    * @static
    * @method showFps
    */
-  static showFps = () => {
+  static showFps() {
     if (this._fpsMeter) {
       this._fpsMeter.show()
       this._modeBox.style.opacity = 1
@@ -352,7 +352,7 @@ export default class Graphics {
    * @static
    * @method hideFps
    */
-  static hideFps = () => {
+  static hideFps() {
     if (this._fpsMeter) {
       this._fpsMeter.hide()
       this._modeBox.style.opacity = 0
@@ -367,7 +367,7 @@ export default class Graphics {
    * @param {String} name The face name of the font
    * @param {String} url The url of the font file
    */
-  static loadFont = (name: string, url: string) => {
+  static loadFont(name: string, url: string) {
     const style = document.createElement('style')
     const head = document.getElementsByTagName('head')
     const rule =
@@ -386,7 +386,7 @@ export default class Graphics {
    * @param {String} name The face name of the font
    * @return {Boolean} True if the font file is loaded
    */
-  static isFontLoaded = (name: string): boolean => {
+  static isFontLoaded(name: string): boolean {
     if (Graphics._cssFontLoading) {
       if (Graphics._fontLoaded) {
         return Graphics._fontLoaded.check(`10px "${name}"`)
@@ -414,7 +414,7 @@ export default class Graphics {
    * @method playVideo
    * @param {String} src
    */
-  static playVideo = (src: string) => {
+  static playVideo(src: string) {
     this._videoLoader = ResourceHandler.createLoader(
       null,
       this._playVideo.bind(this, src),
@@ -429,7 +429,7 @@ export default class Graphics {
    * @param {String} src
    * @private
    */
-  static _playVideo = (src: string) => {
+  static _playVideo(src: string) {
     this._video.src = src
     this._video.onloadeddata = this._onVideoLoad.bind(this)
     this._video.onerror = this._videoLoader
@@ -445,7 +445,7 @@ export default class Graphics {
    * @method isVideoPlaying
    * @return {Boolean} True if the video is playing
    */
-  static isVideoPlaying = (): boolean => {
+  static isVideoPlaying(): boolean {
     return this._videoLoading || this._isVideoVisible()
   }
 
@@ -457,7 +457,7 @@ export default class Graphics {
    * @param {String} type The video type to test support for
    * @return {Boolean} True if the browser can play the specified video type
    */
-  static canPlayVideoType = (type: string): boolean => {
+  static canPlayVideoType(type: string): boolean {
     return this._video && this._video.canPlayType(type)
   }
 
@@ -468,7 +468,7 @@ export default class Graphics {
    * @method setVideoVolume
    * @param {Number} value
    */
-  static setVideoVolume = (value: number) => {
+  static setVideoVolume(value: number) {
     this._videoVolume = value
     if (this._video) {
       this._video.volume = this._videoVolume
@@ -484,7 +484,7 @@ export default class Graphics {
    * @param {Number} x The x coordinate on the page to be converted
    * @return {Number} The x coordinate on the canvas area
    */
-  static pageToCanvasX = (x: number): number => {
+  static pageToCanvasX(x: number): number {
     if (this._canvas) {
       const left = this._canvas.offsetLeft
       return Math.round((x - left) / this._realScale)
@@ -502,7 +502,7 @@ export default class Graphics {
    * @param {Number} y The y coordinate on the page to be converted
    * @return {Number} The y coordinate on the canvas area
    */
-  static pageToCanvasY = (y: number): number => {
+  static pageToCanvasY(y: number): number {
     if (this._canvas) {
       const top = this._canvas.offsetTop
       return Math.round((y - top) / this._realScale)
@@ -520,14 +520,14 @@ export default class Graphics {
    * @param {Number} y The y coordinate on the canvas area
    * @return {Boolean} True if the specified point is inside the game canvas area
    */
-  static isInsideCanvas = (x: number, y: number): boolean => {
+  static isInsideCanvas(x: number, y: number): boolean {
     return x >= 0 && x < this._width && y >= 0 && y < this._height
   }
 
   /**
    * Calls pixi.js garbage collector
    */
-  static callGC = () => {
+  static callGC() {
     if (Graphics.isWebGL()) {
       Graphics._renderer.textureGC.run()
     }
@@ -617,7 +617,7 @@ export default class Graphics {
    * @method _createAllElements
    * @private
    */
-  static _createAllElements = () => {
+  static _createAllElements() {
     this._createErrorPrinter()
     this._createCanvas()
     this._createVideo()
@@ -633,7 +633,7 @@ export default class Graphics {
    * @method _updateAllElements
    * @private
    */
-  static _updateAllElements = () => {
+  static _updateAllElements() {
     this._updateRealScale()
     this._updateErrorPrinter()
     this._updateCanvas()
@@ -648,7 +648,7 @@ export default class Graphics {
    * @method _updateRealScale
    * @private
    */
-  static _updateRealScale = () => {
+  static _updateRealScale() {
     if (this._stretchEnabled) {
       const h = window.innerWidth / this._width
       const v = window.innerHeight / this._height
@@ -666,7 +666,7 @@ export default class Graphics {
    * @return {String}
    * @private
    */
-  static _makeErrorHtml = (name: string, message: string): string => {
+  static _makeErrorHtml(name: string, message: string): string {
     let result = `<font color="yellow"><b>${name}</b></font><br>`
     result += `<font color="white">${message}'</font><br>`
     return result
@@ -677,7 +677,7 @@ export default class Graphics {
    * @method _defaultStretchMode
    * @private
    */
-  static _defaultStretchMode = () => {
+  static _defaultStretchMode() {
     return Utils.isNwjs() || Utils.isMobileDevice()
   }
 
@@ -686,7 +686,7 @@ export default class Graphics {
    * @method _testCanvasBlendModes
    * @private
    */
-  static _testCanvasBlendModes = () => {
+  static _testCanvasBlendModes() {
     const canvas = document.createElement('canvas')
     canvas.width = 1
     canvas.height = 1
@@ -714,7 +714,7 @@ export default class Graphics {
    * @method _modifyExistingElements
    * @private
    */
-  static _modifyExistingElements = () => {
+  static _modifyExistingElements() {
     const elements = document.getElementsByTagName('*')
     for (let i = 0; i < elements.length; i++) {
       if (elements[i].style.zIndex > 0) {
@@ -728,7 +728,7 @@ export default class Graphics {
    * @method _createErrorPrinter
    * @private
    */
-  static _createErrorPrinter = () => {
+  static _createErrorPrinter() {
     this._errorPrinter = document.createElement('p')
     this._errorPrinter.id = 'ErrorPrinter'
     this._updateErrorPrinter()
@@ -740,7 +740,7 @@ export default class Graphics {
    * @method _updateErrorPrinter
    * @private
    */
-  static _updateErrorPrinter = () => {
+  static _updateErrorPrinter() {
     this._errorPrinter.width = this._width * 0.9
     this._errorPrinter.height = 40
     this._errorPrinter.style.textAlign = 'center'
@@ -755,7 +755,7 @@ export default class Graphics {
    * @method _createCanvas
    * @private
    */
-  static _createCanvas = () => {
+  static _createCanvas() {
     this._canvas = document.createElement('canvas')
     this._canvas.id = 'GameCanvas'
     this._updateCanvas()
@@ -767,7 +767,7 @@ export default class Graphics {
    * @method _updateCanvas
    * @private
    */
-  static _updateCanvas = () => {
+  static _updateCanvas() {
     this._canvas.width = this._width
     this._canvas.height = this._height
     this._canvas.style.zIndex = 1
@@ -779,7 +779,7 @@ export default class Graphics {
    * @method _createVideo
    * @private
    */
-  static _createVideo = () => {
+  static _createVideo() {
     this._video = document.createElement('video')
     this._video.id = 'GameVideo'
     this._video.style.opacity = 0
@@ -795,7 +795,7 @@ export default class Graphics {
    * @method _updateVideo
    * @private
    */
-  static _updateVideo = () => {
+  static _updateVideo() {
     this._video.width = this._width
     this._video.height = this._height
     this._video.style.zIndex = 2
@@ -807,7 +807,7 @@ export default class Graphics {
    * @method _createUpperCanvas
    * @private
    */
-  static _createUpperCanvas = () => {
+  static _createUpperCanvas() {
     this._upperCanvas = document.createElement('canvas')
     this._upperCanvas.id = 'UpperCanvas'
     this._updateUpperCanvas()
@@ -819,7 +819,7 @@ export default class Graphics {
    * @method _updateUpperCanvas
    * @private
    */
-  static _updateUpperCanvas = () => {
+  static _updateUpperCanvas() {
     this._upperCanvas.width = this._width
     this._upperCanvas.height = this._height
     this._upperCanvas.style.zIndex = 3
@@ -831,7 +831,7 @@ export default class Graphics {
    * @method _clearUpperCanvas
    * @private
    */
-  static _clearUpperCanvas = () => {
+  static _clearUpperCanvas() {
     const context = this._upperCanvas.getContext('2d')
     context.clearRect(0, 0, this._width, this._height)
   }
@@ -841,7 +841,7 @@ export default class Graphics {
    * @method _paintUpperCanvas
    * @private
    */
-  static _paintUpperCanvas = () => {
+  static _paintUpperCanvas() {
     this._clearUpperCanvas()
     if (this._loadingImage && this._loadingCount >= 20) {
       const context = this._upperCanvas.getContext('2d')
@@ -860,7 +860,7 @@ export default class Graphics {
    * @method _createRenderer
    * @private
    */
-  static _createRenderer = () => {
+  static _createRenderer() {
     PIXI.dontSayHello = true
     const width = this._width
     const height = this._height
@@ -890,7 +890,7 @@ export default class Graphics {
    * @method _updateRenderer
    * @private
    */
-  static _updateRenderer = () => {
+  static _updateRenderer() {
     if (this._renderer) {
       this._renderer.resize(this._width, this._height)
     }
@@ -901,7 +901,7 @@ export default class Graphics {
    * @method _createFPSMeter
    * @private
    */
-  static _createFPSMeter = () => {
+  static _createFPSMeter() {
     const options = {
       graph: 1,
       decimals: 0,
@@ -917,7 +917,7 @@ export default class Graphics {
    * @method _createModeBox
    * @private
    */
-  static _createModeBox = () => {
+  static _createModeBox() {
     const box = document.createElement('div')
     box.id = 'modeTextBack'
     box.style.position = 'absolute'
@@ -953,7 +953,7 @@ export default class Graphics {
    * @method _createGameFontLoader
    * @private
    */
-  static _createGameFontLoader = () => {
+  static _createGameFontLoader() {
     this._createFontLoader('GameFont')
   }
 
@@ -963,7 +963,7 @@ export default class Graphics {
    * @param {String} name
    * @private
    */
-  static _createFontLoader = (name: string) => {
+  static _createFontLoader(name: string) {
     const div = document.createElement('div')
     const text = document.createTextNode('.')
     div.style.fontFamily = name
@@ -985,7 +985,7 @@ export default class Graphics {
    * @param {HTMLElement} element
    * @private
    */
-  static _centerElement = (element: HTMLElement) => {
+  static _centerElement(element: HTMLElement) {
     const width = element.width * this._realScale
     const height = element.height * this._realScale
     element.style.position = 'absolute'
@@ -1003,7 +1003,7 @@ export default class Graphics {
    * @method _disableTextSelection
    * @private
    */
-  static _disableTextSelection = () => {
+  static _disableTextSelection() {
     const body = document.body
     body.style.userSelect = 'none'
     body.style.webkitUserSelect = 'none'
@@ -1016,7 +1016,7 @@ export default class Graphics {
    * @method _disableContextMenu
    * @private
    */
-  static _disableContextMenu = () => {
+  static _disableContextMenu() {
     const elements = document.body.getElementsByTagName('*')
     const oncontextmenu = () => false
     for (let i = 0; i < elements.length; i++) {
@@ -1029,7 +1029,7 @@ export default class Graphics {
    * @method _applyCanvasFilter
    * @private
    */
-  static _applyCanvasFilter = () => {
+  static _applyCanvasFilter() {
     if (this._canvas) {
       this._canvas.style.opacity = 0.5
       this._canvas.style.filter = 'blur(8px)'
@@ -1042,7 +1042,7 @@ export default class Graphics {
    * @method _onVideoLoad
    * @private
    */
-  static _onVideoLoad = () => {
+  static _onVideoLoad() {
     this._video.play()
     this._updateVisibility(true)
     this._videoLoading = false
@@ -1053,7 +1053,7 @@ export default class Graphics {
    * @method _onVideoError
    * @private
    */
-  static _onVideoError = () => {
+  static _onVideoError() {
     this._updateVisibility(false)
     this._videoLoading = false
   }
@@ -1063,7 +1063,7 @@ export default class Graphics {
    * @method _onVideoEnd
    * @private
    */
-  static _onVideoEnd = () => {
+  static _onVideoEnd() {
     this._updateVisibility(false)
   }
 
@@ -1073,7 +1073,7 @@ export default class Graphics {
    * @param {Boolean} videoVisible
    * @private
    */
-  static _updateVisibility = (videoVisible: boolean) => {
+  static _updateVisibility(videoVisible: boolean) {
     this._video.style.opacity = videoVisible ? 1 : 0
     this._canvas.style.opacity = videoVisible ? 0 : 1
   }
@@ -1084,7 +1084,7 @@ export default class Graphics {
    * @return {Boolean}
    * @private
    */
-  static _isVideoVisible = () => {
+  static _isVideoVisible() {
     return this._video.style.opacity > 0
   }
 
@@ -1093,7 +1093,7 @@ export default class Graphics {
    * @method _setupEventHandlers
    * @private
    */
-  static _setupEventHandlers = () => {
+  static _setupEventHandlers() {
     window.addEventListener('resize', this._onWindowResize.bind(this))
     document.addEventListener('keydown', this._onKeyDown.bind(this))
     document.addEventListener('keydown', this._onTouchEnd.bind(this))
@@ -1106,7 +1106,7 @@ export default class Graphics {
    * @method _onWindowResize
    * @private
    */
-  static _onWindowResize = () => {
+  static _onWindowResize() {
     this._updateAllElements()
   }
 
@@ -1116,7 +1116,7 @@ export default class Graphics {
    * @param {KeyboardEvent} event
    * @private
    */
-  static _onKeyDown = (event: KeyboardEvent) => {
+  static _onKeyDown(event: KeyboardEvent) {
     if (!event.ctrlKey && !event.altKey) {
       switch (event.keyCode) {
         case 113: // F2
@@ -1141,7 +1141,7 @@ export default class Graphics {
    * @param {TouchEvent} event
    * @private
    */
-  static _onTouchEnd = (event: TouchEvent) => {
+  static _onTouchEnd(event: TouchEvent) {
     if (!this._videoUnlocked) {
       this._video.play()
       this._videoUnlocked = true
@@ -1156,7 +1156,7 @@ export default class Graphics {
    * @method _switchFPSMeter
    * @private
    */
-  static _switchFPSMeter = () => {
+  static _switchFPSMeter() {
     if (this._fpsMeter.isPaused) {
       this.showFps()
       this._fpsMeter.showFps()
@@ -1175,7 +1175,7 @@ export default class Graphics {
    * @return {Boolean}
    * @private
    */
-  static _switchStretchMode = () => {
+  static _switchStretchMode() {
     this._stretchEnabled = !this._stretchEnabled
     this._updateAllElements()
   }
@@ -1185,7 +1185,7 @@ export default class Graphics {
    * @method _switchFullScreen
    * @private
    */
-  static _switchFullScreen = () => {
+  static _switchFullScreen() {
     if (this._isFullScreen()) {
       this._requestFullScreen()
     } else {
@@ -1199,7 +1199,7 @@ export default class Graphics {
    * @return {Boolean}
    * @private
    */
-  static _isFullScreen = () => {
+  static _isFullScreen() {
     return (
       (document.fullScreenElement && document.fullScreenElement !== null) ||
       (!document.mozFullScreen &&
@@ -1213,7 +1213,7 @@ export default class Graphics {
    * @method _requestFullScreen
    * @private
    */
-  static _requestFullScreen = () => {
+  static _requestFullScreen() {
     const element = document.body
     if (element.requestFullScreen) {
       element.requestFullScreen()
@@ -1231,7 +1231,7 @@ export default class Graphics {
    * @method _cancelFullScreen
    * @private
    */
-  static _cancelFullScreen = () => {
+  static _cancelFullScreen() {
     if (document.cancelFullScreen) {
       document.cancelFullScreen()
     } else if (document.mozCancelFullScreen) {

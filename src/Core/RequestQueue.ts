@@ -3,14 +3,14 @@ export default class RequestQueue {
     this._queue = []
   }
 
-  enqueue = (key, value) => {
+  enqueue(key, value) {
     this._queue.push({
       key: key,
       value: value
     })
   }
 
-  update = () => {
+  update() {
     if (this._queue.length === 0) return
 
     const top = this._queue[0]
@@ -24,7 +24,7 @@ export default class RequestQueue {
     }
   }
 
-  raisePriority = key => {
+  raisePriority(key) {
     for (let n = 0; n < this._queue.length; n++) {
       const item = this._queue[n]
       if (item.key === key) {
@@ -35,7 +35,7 @@ export default class RequestQueue {
     }
   }
 
-  clear = () => {
+  clear() {
     this._queue.splice(0)
   }
 }

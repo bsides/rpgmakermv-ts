@@ -17,7 +17,7 @@ export default class CacheMap {
   /**
    * checks ttl of all elements and removes dead ones
    */
-  checkTTL = () => {
+  checkTTL() {
     const cache = this._inner
     let temp = this._lastRemovedEntries
     if (!temp) {
@@ -41,7 +41,7 @@ export default class CacheMap {
    * @param key url of cache element
    * @returns {*|null}
    */
-  getItem = (key): any | null => {
+  getItem(key): any | null {
     const entry = this._inner[key]
     if (entry) {
       return entry.item
@@ -49,18 +49,18 @@ export default class CacheMap {
     return null
   }
 
-  clear = () => {
+  clear() {
     var keys = Object.keys(this._inner)
     for (var i = 0; i < keys.length; i++) {
       this._inner[keys[i]].free()
     }
   }
 
-  setItem = (key, item) => {
+  setItem(key, item) {
     return new CacheEntry(this, key, item).allocate()
   }
 
-  update = (ticks, delta) => {
+  update(ticks, delta) {
     this.updateTicks += ticks
     this.updateSeconds += delta
     if (this.updateSeconds >= this.delayCheckTTL + this.lastCheckTTL) {

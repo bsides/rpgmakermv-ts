@@ -1,5 +1,3 @@
-import './Bitmap'
-import './Graphics'
 import './Other'
 import './Utils'
 import './CacheEntry'
@@ -7,6 +5,11 @@ import './CacheMap'
 import './ImageCache'
 import './RequestQueue'
 import './Point'
+import './Rectangle'
+import './Bitmap'
+import './Graphics'
+import './Input'
+import './TouchInput'
 
 //-----------------------------------------------------------------------------
 /**

@@ -8,6 +8,74 @@
  * @param {Number} height The height of the bitmap
  */
 export default class Bitmap {
+  constructor(width: number, height: number) {
+    if (!this._defer) {
+      this._createCanvas(width, height)
+    }
+
+    this._image = null
+    this._url = ''
+    this._paintOpacity = 255
+    this._smooth = false
+    this._loadListeners = []
+    this._loadingState = 'none'
+    this._decodeAfterRequest = false
+
+    /**
+     * Cache entry, for images. In all cases _url is the same as cacheEntry.key
+     * @type CacheEntry
+     */
+    this.cacheEntry = null
+
+    /**
+     * The face name of the font.
+     *
+     * @property fontFace
+     * @type String
+     */
+    this.fontFace = 'GameFont'
+
+    /**
+     * The size of the font in pixels.
+     *
+     * @property fontSize
+     * @type Number
+     */
+    this.fontSize = 28
+
+    /**
+     * Whether the font is italic.
+     *
+     * @property fontItalic
+     * @type Boolean
+     */
+    this.fontItalic = false
+
+    /**
+     * The color of the text in CSS format.
+     *
+     * @property textColor
+     * @type String
+     */
+    this.textColor = '#ffffff'
+
+    /**
+     * The color of the outline of the text in CSS format.
+     *
+     * @property outlineColor
+     * @type String
+     */
+    this.outlineColor = 'rgba(0, 0, 0, 0.5)'
+
+    /**
+     * The width of the outline of the text.
+     *
+     * @property outlineWidth
+     * @type Number
+     */
+    this.outlineWidth = 4
+  }
+
   static _reuseImages = []
 
   get _canvas() {
@@ -173,7 +241,7 @@ export default class Bitmap {
    * error occurred
    *
    */
-  private createCanvas = (width: number, height: number) => {
+  private createCanvas(width: number, height: number) {
     this.__canvas = this.__canvas || document.createElement('canvas')
     this.__context = this.__canvas.getContext('2d')
 
@@ -192,7 +260,8 @@ export default class Bitmap {
 
     this._setDirty()
   }
-  private _createBaseTexture = (source: object) => {
+
+  private _createBaseTexture(source: object) {
     this.__baseTexture = new PIXI.BaseTexture(source)
     this.__baseTexture.mipmap = false
     this.__baseTexture.width = source.width
@@ -204,7 +273,8 @@ export default class Bitmap {
       this._baseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST
     }
   }
-  private _clearImgInstance = () => {
+
+  private _clearImgInstance() {
     this._image.src = ''
     this._image.onload = null
     this._image.onerror = null
@@ -214,7 +284,8 @@ export default class Bitmap {
     Bitmap._reuseImages.push(this._image)
     this._image = null
   }
-  private _renewCanvas = () => {
+
+  private _renewCanvas() {
     const newImage = this._image
     if (
       newImage &&
@@ -226,75 +297,7 @@ export default class Bitmap {
     }
   }
 
-  constructor(width: number, height: number) {
-    if (!this._defer) {
-      this._createCanvas(width, height)
-    }
-
-    this._image = null
-    this._url = ''
-    this._paintOpacity = 255
-    this._smooth = false
-    this._loadListeners = []
-    this._loadingState = 'none'
-    this._decodeAfterRequest = false
-
-    /**
-     * Cache entry, for images. In all cases _url is the same as cacheEntry.key
-     * @type CacheEntry
-     */
-    this.cacheEntry = null
-
-    /**
-     * The face name of the font.
-     *
-     * @property fontFace
-     * @type String
-     */
-    this.fontFace = 'GameFont'
-
-    /**
-     * The size of the font in pixels.
-     *
-     * @property fontSize
-     * @type Number
-     */
-    this.fontSize = 28
-
-    /**
-     * Whether the font is italic.
-     *
-     * @property fontItalic
-     * @type Boolean
-     */
-    this.fontItalic = false
-
-    /**
-     * The color of the text in CSS format.
-     *
-     * @property textColor
-     * @type String
-     */
-    this.textColor = '#ffffff'
-
-    /**
-     * The color of the outline of the text in CSS format.
-     *
-     * @property outlineColor
-     * @type String
-     */
-    this.outlineColor = 'rgba(0, 0, 0, 0.5)'
-
-    /**
-     * The width of the outline of the text.
-     *
-     * @property outlineWidth
-     * @type Number
-     */
-    this.outlineWidth = 4
-  }
-
-  static load = url => {
+  static load(url) {
     const bitmap = Object.create(Bitmap.prototype)
     bitmap._defer = true
     bitmap.initialize()
@@ -313,7 +316,7 @@ export default class Bitmap {
    * @param {Stage} stage The stage object
    * @return Bitmap
    */
-  static snap = (stage): Bitmap => {
+  static snap(stage): Bitmap {
     const width = Graphics.width
     const height = Graphics.height
     const bitmap: Bitmap = new Bitmap(width, height)
@@ -342,7 +345,7 @@ export default class Bitmap {
    * @method isReady
    * @return {Boolean} True if the bitmap is ready to render
    */
-  isReady = (): boolean => {
+  isReady(): boolean {
     return this._loadingState === 'loaded' || this._loadingState === 'none'
   }
 
@@ -352,7 +355,7 @@ export default class Bitmap {
    * @method isError
    * @return {Boolean} True if a loading error has occurred
    */
-  isError = (): boolean => {
+  isError(): boolean {
     return this._loadingState === 'error'
   }
 
@@ -360,7 +363,7 @@ export default class Bitmap {
    * touch the resource
    * @method touch
    */
-  touch = () => {
+  touch() {
     if (this.cacheEntry) {
       this.cacheEntry.touch()
     }
@@ -373,7 +376,7 @@ export default class Bitmap {
    * @param {Number} width The new width of the bitmap
    * @param {Number} height The new height of the bitmap
    */
-  resize = (width: number, height: number) => {
+  resize(width: number, height: number) {
     width = Math.max(width || 0, 1)
     height = Math.max(height || 0, 1)
     this._canvas.width = width
@@ -396,7 +399,7 @@ export default class Bitmap {
    * @param {Number} [dw=sw] The width to draw the image in the destination
    * @param {Number} [dh=sh] The height to draw the image in the destination
    */
-  blt = (
+  blt(
     source: Bitmap,
     sx: number,
     sy: number,
@@ -406,7 +409,7 @@ export default class Bitmap {
     dy: number,
     dw: number,
     dh: number
-  ) => {
+  ) {
     dw = dw || sw
     dh = dh || sh
     if (
@@ -439,7 +442,7 @@ export default class Bitmap {
    * @param {Number} [dw=sw] The width to draw the image in the destination
    * @param {Number} [dh=sh] The height to draw the image in the destination
    */
-  bltImage = (
+  bltImage(
     source: Bitmap,
     sx: number,
     sy: number,
@@ -449,7 +452,7 @@ export default class Bitmap {
     dy: number,
     dw: number,
     dh: number
-  ) => {
+  ) {
     dw = dw || sw
     dh = dh || sh
     if (
@@ -476,7 +479,7 @@ export default class Bitmap {
    * @param {Number} y The y coordinate of the pixel in the bitmap
    * @return {String} The pixel color (hex format)
    */
-  getPixel = (x: number, y: number): string => {
+  getPixel(x: number, y: number): string {
     const data = this._context.getImageData(x, y, 1, 1).data
     let result = '#'
     for (let i = 0; i < 3; i++) {
@@ -493,7 +496,7 @@ export default class Bitmap {
    * @param {Number} y The y coordinate of the pixel in the bitmap
    * @return {String} The alpha value
    */
-  getAlphaPixel = (x: number, y: number): string => {
+  getAlphaPixel(x: number, y: number): string {
     const data = this._context.getImageData(x, y, 1, 1).data
     return data[3]
   }
@@ -507,7 +510,7 @@ export default class Bitmap {
    * @param {Number} width The width of the rectangle to clear
    * @param {Number} height The height of the rectangle to clear
    */
-  clearRect = (x: number, y: number, width: number, height: number) => {
+  clearRect(x: number, y: number, width: number, height: number) {
     this._context.clearRect(x, y, width, height)
     this._setDirty()
   }
@@ -517,7 +520,7 @@ export default class Bitmap {
    *
    * @method clear
    */
-  clear = () => {
+  clear() {
     this.clearRect(0, 0, this.width, this.height)
   }
 
@@ -531,13 +534,7 @@ export default class Bitmap {
    * @param {Number} height The height of the rectangle to fill
    * @param {String} color The color of the rectangle in CSS format
    */
-  fillRect = (
-    x: number,
-    y: number,
-    width: number,
-    height: number,
-    color: string
-  ) => {
+  fillRect(x: number, y: number, width: number, height: number, color: string) {
     const context = this._context
     context.save()
     context.fillStyle = color
@@ -552,7 +549,7 @@ export default class Bitmap {
    * @method fillAll
    * @param {String} color The color of the rectangle in CSS format
    */
-  fillAll = (color: string) => {
+  fillAll(color: string) {
     this.fillRect(0, 0, this.width, this.height, color)
   }
 
@@ -568,7 +565,7 @@ export default class Bitmap {
    * @param {String} color2 The gradient ending color
    * @param {Boolean} vertical Wether the gradient should be draw as vertical or not
    */
-  gradientFillRect = (
+  gradientFillRect(
     x: number,
     y: number,
     width: number,
@@ -576,7 +573,7 @@ export default class Bitmap {
     color1: string,
     color2: string,
     vertical: boolean
-  ) => {
+  ) {
     const context = this._context
     let grad
     if (vertical) {
@@ -602,7 +599,7 @@ export default class Bitmap {
    * @param {Number} radius The radius of the circle
    * @param {String} color The color of the circle in CSS format
    */
-  drawCircle = (x: number, y: number, radius: number, color: string) => {
+  drawCircle(x: number, y: number, radius: number, color: string) {
     const context = this._context
     context.save()
     context.fillStyle = color
@@ -624,14 +621,14 @@ export default class Bitmap {
    * @param {Number} lineHeight The height of the text line
    * @param {String} align The alignment of the text
    */
-  drawText = (
+  drawText(
     text: string,
     x: number,
     y: number,
     maxWidth: number,
     lineHeight: number,
     align: string
-  ) => {
+  ) {
     // Note: Firefox has a bug with textBaseline: Bug 737852
     //       So we use 'alphabetic' here.
     if (text !== undefined) {
@@ -666,7 +663,7 @@ export default class Bitmap {
    * @param {String} text The text to be measured
    * @return {Number} The width of the text in pixels
    */
-  measureTextWidth = (text: string): number => {
+  measureTextWidth(text: string): number {
     const context = this._context
     context.save()
     context.font = this._makeFontNameText()
@@ -683,7 +680,7 @@ export default class Bitmap {
    * @param {Number} g The green strength in the range (-255, 255)
    * @param {Number} b The blue strength in the range (-255, 255)
    */
-  adjustTone = (r: number, g: number, b: number) => {
+  adjustTone(r: number, g: number, b: number) {
     if ((r || g || b) && this.width > 0 && this.height > 0) {
       const context = this._context
       const imageData = context.getImageData(0, 0, this.width, this.height)
@@ -704,7 +701,7 @@ export default class Bitmap {
    * @method rotateHue
    * @param {Number} offset The hue offset in 360 degrees
    */
-  rotateHue = (offset: number) => {
+  rotateHue(offset: number) {
     function rgbToHsl(r: number, g: number, b: number): number[] {
       const cmin = Math.min(r, g, b)
       const cmax = Math.max(r, g, b)
@@ -773,7 +770,7 @@ export default class Bitmap {
    *
    * @method blur
    */
-  blur = () => {
+  blur() {
     for (let i = 0; i < 2; i++) {
       const w = this.width
       const h = this.height
@@ -809,7 +806,7 @@ export default class Bitmap {
    * @method addLoadListener
    * @param {Function} listner The callback function
    */
-  addLoadListener = listner => {
+  addLoadListener(listner) {
     if (!this.isReady()) {
       this._loadListeners.push(listner)
     } else {
@@ -821,7 +818,7 @@ export default class Bitmap {
    * @method _makeFontNameText
    * @private
    */
-  private _makeFontNameText = () => {
+  private _makeFontNameText() {
     return (
       (this.fontItalic ? 'Italic ' : '') + this.fontSize + 'px ' + this.fontFace
     )
@@ -835,12 +832,12 @@ export default class Bitmap {
    * @param {Number} maxWidth
    * @private
    */
-  private _drawTextOutline = (
+  private _drawTextOutline(
     text: string,
     tx: number,
     ty: number,
     maxWidth: number
-  ) => {
+  ) {
     const context = this._context
     context.strokeStyle = this.outlineColor
     context.lineWidth = this.outlineWidth
@@ -856,12 +853,12 @@ export default class Bitmap {
    * @param {Number} maxWidth
    * @private
    */
-  private _drawTextBody = (
+  private _drawTextBody(
     text: string,
     tx: number,
     ty: number,
     maxWidth: number
-  ) => {
+  ) {
     const context = this._context
     context.fillStyle = this.textColor
     context.fillText(text, tx, ty, maxWidth)
@@ -871,7 +868,7 @@ export default class Bitmap {
    * @method _onLoad
    * @private
    */
-  private _onLoad = () => {
+  private _onLoad() {
     this._image.removeEventListener('load', this._loadListener)
     this._image.removeEventListener('error', this._errorListener)
 
@@ -901,7 +898,7 @@ export default class Bitmap {
     }
   }
 
-  decode = () => {
+  decode() {
     switch (this._loadingState) {
       case 'requestCompleted':
       case 'decryptCompleted':
@@ -942,7 +939,7 @@ export default class Bitmap {
    * @method _callLoadListeners
    * @private
    */
-  private _callLoadListeners = () => {
+  private _callLoadListeners() {
     while (this._loadListeners.length > 0) {
       const listener = this._loadListeners.shift()
       listener(this)
@@ -953,7 +950,7 @@ export default class Bitmap {
    * @method _onError
    * @private
    */
-  private _onError = () => {
+  private _onError() {
     this._image.removeEventListener('load', this._loadListener)
     this._image.removeEventListener('error', this._errorListener)
     this._loadingState = 'error'
@@ -963,7 +960,7 @@ export default class Bitmap {
    * @method _setDirty
    * @private
    */
-  private _setDirty = () => {
+  private _setDirty() {
     this._dirty = true
   }
 
@@ -971,14 +968,14 @@ export default class Bitmap {
    * updates texture is bitmap was dirty
    * @method checkDirty
    */
-  checkDirty = () => {
+  checkDirty() {
     if (this._dirty) {
       this._baseTexture.update()
       this._dirty = false
     }
   }
 
-  static request = url => {
+  static request(url) {
     const bitmap = Object.create(Bitmap.prototype)
     bitmap._defer = true
     bitmap.initialize()
@@ -989,7 +986,7 @@ export default class Bitmap {
     return bitmap
   }
 
-  private _requestImage = url => {
+  private _requestImage(url) {
     if (Bitmap._reuseImages.length !== 0) {
       this._image = Bitmap._reuseImages.pop()
     } else {
@@ -1026,11 +1023,11 @@ export default class Bitmap {
     }
   }
 
-  isRequestOnly = () => {
+  isRequestOnly() {
     return !(this._decodeAfterRequest || this.isReady())
   }
 
-  isRequestReady = () => {
+  isRequestReady() {
     return (
       this._loadingState !== 'pending' &&
       this._loadingState !== 'requesting' &&
@@ -1038,7 +1035,7 @@ export default class Bitmap {
     )
   }
 
-  startRequest = () => {
+  startRequest() {
     if (this._loadingState === 'pending') {
       this._decodeAfterRequest = false
       this._requestImage(this._url)
