@@ -2,6 +2,11 @@ import './Bitmap'
 import './Graphics'
 import './Other'
 import './Utils'
+import './CacheEntry'
+import './CacheMap'
+import './ImageCache'
+import './RequestQueue'
+import './Point'
 
 //-----------------------------------------------------------------------------
 /**
