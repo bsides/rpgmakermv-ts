@@ -4,7 +4,7 @@
  *
  * @class Graphics
  */
-class Graphics {
+export default class Graphics {
   constructor() {
     throw new Error('This is a static class')
   }
