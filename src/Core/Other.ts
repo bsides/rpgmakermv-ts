@@ -28,8 +28,12 @@ interface Math {
  * @param {Number} max The upper boundary
  * @return {Number} A number in the range (min, max)
  */
-Number.prototype.clamp = function(min: number, max: number): number {
-  return Math.min(Math.max(<number>this, min), max)
+Number.prototype.clamp = function(
+  this: number,
+  min: number,
+  max: number
+): number {
+  return Math.min(Math.max(this, min), max)
 }
 
 /**
@@ -39,8 +43,8 @@ Number.prototype.clamp = function(min: number, max: number): number {
  * @param {Number} n The divisor
  * @return {Number} A modulo value
  */
-Number.prototype.mod = function(n: number): number {
-  return (<number>this % n + n) % n
+Number.prototype.mod = function(this: number, n: number): number {
+  return (this % n + n) % n
 }
 
 /**
@@ -64,12 +68,12 @@ String.prototype.format = function(): string {
  * @param {Number} length The length of the output string
  * @return {String} A string with leading zeros
  */
-String.prototype.padZero = function(length: number): string {
+String.prototype.padZero = function(this: string, length: number): string {
   var s = this
   while (s.length < length) {
     s = '0' + s
   }
-  return <string>s
+  return s
 }
 
 /**
